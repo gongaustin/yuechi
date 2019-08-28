@@ -1,7 +1,15 @@
 package com.gongjun.yuechi.model;
 
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gongjun.yuechi.core.constant.TimeConstant;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.io.Serializable;
 
 /**
@@ -20,22 +28,27 @@ public class Dept implements Serializable {
     /**
      * 编号
      */
+    @TableId(value = "id", type = IdType.UUID)
     private String id;
     /**
      * 所属上级
      */
+    @TableField("p_id")
     private String pId;
     /**
      * 科室编号
      */
+    @TableField("dept_no")
     private String deptNo;
     /**
      * 科室名称
      */
+    @TableField("dept_name")
     private String deptName;
     /**
      * 科室负责人ID
      */
+    @TableField("header_id")
     private String headerId;
     /**
      * 科室负责人
@@ -60,6 +73,8 @@ public class Dept implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(timezone = TimeConstant.TIME_ZONE, pattern = TimeConstant.DATETIME_FORMAT)
+    @DateTimeFormat(pattern = TimeConstant.DATETIME_FORMAT)
     private Date ctime;
     /**
      * 是否启用（0：停用；1：启用）
@@ -72,6 +87,7 @@ public class Dept implements Serializable {
     /**
      * 是否重点科室（0：不是；1：是）
      */
+    @TableField("is_important")
     private Integer isImportant;
     /**
      * 备用字段

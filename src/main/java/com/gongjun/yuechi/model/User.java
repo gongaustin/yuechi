@@ -1,7 +1,12 @@
 package com.gongjun.yuechi.model;
 
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
 
 /**
@@ -20,6 +25,7 @@ public class User implements Serializable {
     /**
      * 编号
      */
+    @TableId(value = "id", type = IdType.UUID)
     private String id;
     /**
      * 帐号
@@ -64,6 +70,7 @@ public class User implements Serializable {
     /**
      * 科室ID
      */
+    @TableField("dept_id")
     private String deptId;
     /**
      * 职务
@@ -72,6 +79,7 @@ public class User implements Serializable {
     /**
      * 办公室电话
      */
+    @TableField("office_phone")
     private String officePhone;
     /**
      * 状态(1:正常,0:锁定)

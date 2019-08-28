@@ -1,6 +1,10 @@
 package com.gongjun.yuechi.model;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
 
 /**
@@ -19,6 +23,7 @@ public class Log implements Serializable {
     /**
      * 编号
      */
+    @TableId(value = "id", type = IdType.UUID)
     private String id;
     /**
      * 操作描述
@@ -31,14 +36,17 @@ public class Log implements Serializable {
     /**
      * 操作时间
      */
+    @TableField("start_time")
     private Long startTime;
     /**
      * 消耗时间
      */
+    @TableField("spend_time")
     private Integer spendTime;
     /**
      * 根路径
      */
+    @TableField("base_path")
     private String basePath;
     /**
      * URI
@@ -56,6 +64,7 @@ public class Log implements Serializable {
     /**
      * 用户标识
      */
+    @TableField("user_agent")
     private String userAgent;
     /**
      * IP地址

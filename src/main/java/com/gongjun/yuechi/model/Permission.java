@@ -1,7 +1,12 @@
 package com.gongjun.yuechi.model;
 
 import java.util.Date;
+
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
 
 /**
@@ -20,10 +25,12 @@ public class Permission implements Serializable {
     /**
      * 编号
      */
+    @TableId(value = "id", type = IdType.UUID)
     private String id;
     /**
      * 所属上级
      */
+    @TableField("p_id")
     private String pId;
     /**
      * 名称
@@ -36,6 +43,7 @@ public class Permission implements Serializable {
     /**
      * 权限值
      */
+    @TableField("permission_value")
     private String permissionValue;
     /**
      * 路径

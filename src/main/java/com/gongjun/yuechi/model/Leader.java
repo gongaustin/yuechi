@@ -1,6 +1,10 @@
 package com.gongjun.yuechi.model;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
 
 /**
@@ -19,6 +23,7 @@ public class Leader implements Serializable {
     /**
      * ID
      */
+    @TableId(value = "id", type = IdType.UUID)
     private String id;
     /**
      * 姓名
@@ -35,6 +40,7 @@ public class Leader implements Serializable {
     /**
      * 负责内容
      */
+    @TableField("res_content")
     private String resContent;
 
 

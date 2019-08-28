@@ -1,6 +1,10 @@
 package com.gongjun.yuechi.model;
 
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+
 import java.io.Serializable;
 
 /**
@@ -19,18 +23,22 @@ public class AttachmentRelation implements Serializable {
     /**
      * ID
      */
+    @TableId(value = "id", type = IdType.UUID)
     private String id;
     /**
      * 附件ID
      */
+    @TableField("attachment_id")
     private String attachmentId;
     /**
      * 所有者类型
      */
+    @TableField("owner_type")
     private String ownerType;
     /**
      * 所有者ID
      */
+    @TableField("owner_id")
     private String ownerId;
 
 
