@@ -2,8 +2,7 @@ package com.gongjun.yuechi.core.shiro;
 
 import com.gongjun.yuechi.core.bean.UserBean;
 import com.gongjun.yuechi.core.utils.JWTUtil;
-import com.gongjun.yuechi.service.IUserService;
-import com.gongjun.yuechi.service.impl.UserServiceImpl;
+import com.gongjun.yuechi.service.IWebUserService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.shiro.authc.AuthenticationException;
@@ -14,7 +13,6 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -32,7 +30,7 @@ public class MyRealm extends AuthorizingRealm {
 
     private static final Logger LOGGER = LogManager.getLogger(MyRealm.class);
     @Resource
-    private IUserService service;
+    private IWebUserService service;
 
     /**
      * 大坑！，必须重写此方法，不然Shiro会报错

@@ -1,10 +1,10 @@
-package com.gongjun.yuechi.controller;
+package com.gongjun.yuechi.controller.test;
 
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.core.bean.UserBean;
 import com.gongjun.yuechi.core.exception.UnauthorizedException;
 import com.gongjun.yuechi.core.utils.JWTUtil;
-import com.gongjun.yuechi.service.IUserService;
+import com.gongjun.yuechi.service.IWebUserService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
@@ -27,7 +27,7 @@ import javax.annotation.Resource;
 public class WebController {
     private static final Logger LOGGER = LogManager.getLogger(WebController.class);
     @Resource
-    private IUserService service;
+    private IWebUserService service;
 
 
     @PostMapping("/login")

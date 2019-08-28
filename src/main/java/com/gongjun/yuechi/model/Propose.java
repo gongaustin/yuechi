@@ -1,0 +1,91 @@
+package com.gongjun.yuechi.model;
+
+import com.baomidou.mybatisplus.annotations.TableName;
+import java.io.Serializable;
+
+/**
+ * <p>
+ * 投诉建议
+ * </p>
+ *
+ * @author GongJun
+ * @since 2019-08-28
+ */
+@TableName("busi_propose")
+public class Propose implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * ID
+     */
+    private String id;
+    /**
+     * 姓名
+     */
+    private String name;
+    /**
+     * 邮箱
+     */
+    private String email;
+    /**
+     * 联系电话
+     */
+    private String cellphone;
+    /**
+     * 建议内容
+     */
+    private String content;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCellphone() {
+        return cellphone;
+    }
+
+    public void setCellphone(String cellphone) {
+        this.cellphone = cellphone;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    @Override
+    public String toString() {
+        return "Propose{" +
+        ", id=" + id +
+        ", name=" + name +
+        ", email=" + email +
+        ", cellphone=" + cellphone +
+        ", content=" + content +
+        "}";
+    }
+}
