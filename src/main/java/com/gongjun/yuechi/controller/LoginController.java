@@ -49,7 +49,7 @@ public class LoginController {
     @Autowired
     private IDeptService dservice;
 
-    @ApiImplicitParams({@ApiImplicitParam(name = "username", value = "用户", required = true, dataType = "String"), @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String")})
+    @ApiImplicitParams({@ApiImplicitParam(paramType="query",name = "username", value = "用户", required = true, dataType = "String"), @ApiImplicitParam(paramType="query",name = "password", value = "密码", required = true, dataType = "String")})
     @PostMapping(value = "/login")
     @ResponseBody
     public ResponseBean login(String username, String password, Model model) {
