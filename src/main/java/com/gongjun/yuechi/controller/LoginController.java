@@ -5,20 +5,28 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.core.utils.JWTUtil;
 import com.gongjun.yuechi.core.utils.Md5;
+import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.model.User;
+import com.gongjun.yuechi.model.UserPermission;
+import com.gongjun.yuechi.service.IPermissionService;
+import com.gongjun.yuechi.service.IUserPermissionService;
 import com.gongjun.yuechi.service.IUserService;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description:
@@ -30,6 +38,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
     @Autowired
     private IUserService service;
+
+    @Autowired
+    private IUserPermissionService upservice;
+
+    @Autowired
+    private IPermissionService pservice;
 
     @ApiImplicitParams({@ApiImplicitParam(name = "username", value = "用户", required = true, dataType = "String"), @ApiImplicitParam(name = "password", value = "密码", required = true, dataType = "String")})
     @PostMapping(value = "/login")
@@ -44,6 +58,9 @@ public class LoginController {
             return new ResponseBean(6001, "username or password error", null);
         }
         String token;
+        List<UserPermission> ups= this.upservice.selectList(new EntityWrapper<UserPermission>().where("user_id={0}", user.getId()));
+        List<String> ids = CollectionUtils.isEmpty(ups)?Lists.newArrayList():ups.stream().map(UserPermission::getPermissionId).collect(Collectors.toList());
+        List<String> values = this.pservice.selectList(new EntityWrapper<Permission>().in("id",ids)).stream().map(Permission::getPermissionValue).collect(Collectors.toList());
         try {
             token = JWTUtil.sign(user.getId(), user.getUsername());
         } catch (LockedAccountException lae) {
@@ -53,7 +70,7 @@ public class LoginController {
         } catch (Exception err) {
             return new ResponseBean(6001, err.getMessage(), null);
         }
-        return new ResponseBean(200, "login success", token);
+        return new ResponseBean(200, "login success", values);
 
     }
 }
