@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -40,6 +41,10 @@ public class Propose implements Serializable {
      * 建议内容
      */
     private String content;
+    /**
+     * 创建时间
+     */
+    private Date ctime;
 
 
     public String getId() {
@@ -82,6 +87,14 @@ public class Propose implements Serializable {
         this.content = content;
     }
 
+    public Date getCtime() {
+        return ctime;
+    }
+
+    public void setCtime(Date ctime) {
+        this.ctime = ctime;
+    }
+
     @Override
     public String toString() {
         return "Propose{" +
@@ -90,6 +103,7 @@ public class Propose implements Serializable {
         ", email=" + email +
         ", cellphone=" + cellphone +
         ", content=" + content +
+        ", ctime=" + ctime +
         "}";
     }
 }
