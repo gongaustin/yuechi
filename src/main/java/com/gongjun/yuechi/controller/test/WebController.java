@@ -30,7 +30,7 @@ public class WebController {
     private IWebUserService service;
 
 
-    @PostMapping("/login")
+    @PostMapping("/login2")
     public ResponseBean login(@RequestParam("username") String username,
                               @RequestParam("password") String password) {
         UserBean userBean = this.service.getUser(username);
