@@ -1,7 +1,10 @@
 package com.gongjun.yuechi.service;
 
+import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.model.User;
 import com.baomidou.mybatisplus.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +15,7 @@ import com.baomidou.mybatisplus.service.IService;
  * @since 2019-08-28
  */
 public interface IUserService extends IService<User> {
+
+    List<Permission> selectUserPermissionsById(String userid);
 
 }

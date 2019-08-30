@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -67,9 +68,9 @@ public class LoginController {
         }
         String token;
         //查询权限值
-        List<UserPermission> ups= this.upservice.selectList(new EntityWrapper<UserPermission>().where("user_id={0}", user.getId()));
-        List<String> ids = CollectionUtils.isEmpty(ups)?Lists.newArrayList():ups.stream().map(UserPermission::getPermissionId).collect(Collectors.toList());
-        List<String> values = this.pservice.selectList(new EntityWrapper<Permission>().in("id",ids)).stream().map(Permission::getPermissionValue).collect(Collectors.toList());
+        List<Permission> permissions = this.service.selectUserPermissionsById(user.getId());
+        List<String> values = Lists.newArrayList();
+        if(!CollectionUtils.isEmpty(permissions)) values = permissions.stream().map(Permission::getPermissionValue).collect(Collectors.toList());
         //查询部门
         Dept d = this.dservice.selectOne(new EntityWrapper<Dept>().where("id={0}",user.getDeptId()));
         try {
@@ -77,7 +78,7 @@ public class LoginController {
         } catch (Exception err) {
             return new ResponseBean(6001, err.getMessage(), null);
         }
-        return new ResponseBean(200, "login success", ImmutableMap.of("realname",user.getRealname(),"dept",d.getDeptName(),"token",token,"permissions",values));
+        return new ResponseBean(200, "login success", ImmutableMap.of("realname",user.getRealname(),"dept",d.getDeptName(),"token",token,"permissions",permissions));
 
     }
 }

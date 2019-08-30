@@ -30,7 +30,7 @@ public class Permission implements Serializable {
     /**
      * 所属上级
      */
-    @TableField("p_id")
+    @TableField(value = "p_id",exist = true)
     private String pId;
     /**
      * 名称
@@ -43,7 +43,7 @@ public class Permission implements Serializable {
     /**
      * 权限值
      */
-    @TableField("permission_value")
+    @TableField(value = "permission_value",exist = true)
     private String permissionValue;
     /**
      * 路径
