@@ -69,8 +69,6 @@ public class LoginController {
         String token;
         //查询权限值
         List<Permission> permissions = this.service.selectUserPermissionsById(user.getId());
-        List<String> values = Lists.newArrayList();
-        if(!CollectionUtils.isEmpty(permissions)) values = permissions.stream().map(Permission::getPermissionValue).collect(Collectors.toList());
         //查询部门
         Dept d = this.dservice.selectOne(new EntityWrapper<Dept>().where("id={0}",user.getDeptId()));
         try {
@@ -78,7 +76,7 @@ public class LoginController {
         } catch (Exception err) {
             return new ResponseBean(6001, err.getMessage(), null);
         }
-        return new ResponseBean(200, "login success", ImmutableMap.of("realname",user.getRealname(),"dept",d.getDeptName(),"token",token,"permissions",permissions));
+        return new ResponseBean(200, "login success", ImmutableMap.of("realname",user.getRealname(),"dept",d.getDeptName(),"token",token,"permissions",Objects.requireNonNull(permissions == null ? null : permissions.stream().map(Permission::getPermissionValue).collect(Collectors.toList()))));
 
     }
 }

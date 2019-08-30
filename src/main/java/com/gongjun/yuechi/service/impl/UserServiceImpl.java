@@ -1,5 +1,6 @@
 package com.gongjun.yuechi.service.impl;
 
+import com.gongjun.yuechi.core.bean.UserBean;
 import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.model.User;
 import com.gongjun.yuechi.mapper.UserMapper;
@@ -24,5 +25,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public List<Permission> selectUserPermissionsById(String userid) {
         return userid==null?null:this.baseMapper.selectUserPermissionsById(userid);
+    }
+
+    @Override
+    public UserBean getUser(String username) {
+        UserBean ub = new UserBean();
+        return null;
     }
 }

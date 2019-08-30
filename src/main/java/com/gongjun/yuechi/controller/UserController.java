@@ -6,6 +6,7 @@ import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.model.User;
 import com.gongjun.yuechi.service.IUserService;
 import io.swagger.annotations.Api;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,7 @@ public class UserController {
     /**
      * 分页查询用户
      * */
+    @RequiresAuthentication
     @GetMapping("/page")
     public ResponseBean selectUserPage(Page<User> page){
 
