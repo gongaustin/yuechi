@@ -1,6 +1,5 @@
 package com.gongjun.yuechi.core.config;
 
-import com.baomidou.mybatisplus.entity.GlobalConfiguration;
 import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,12 +21,5 @@ public class MyBatisPlusConfig {
         // 设置数据库类型
         page.setDialectType("mysql");
         return page;
-    }
-
-    @Bean
-    public GlobalConfiguration globalConfiguration(){
-        GlobalConfiguration globalConfiguration = new GlobalConfiguration();
-        globalConfiguration.setDbColumnUnderline(true);
-        return globalConfiguration;
     }
 }
