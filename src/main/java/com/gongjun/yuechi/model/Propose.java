@@ -3,6 +3,9 @@ package com.gongjun.yuechi.model;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gongjun.yuechi.core.constant.TimeConstant;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -44,6 +47,8 @@ public class Propose implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(timezone = TimeConstant.TIME_ZONE, pattern = TimeConstant.DATETIME_FORMAT)
+    @DateTimeFormat(pattern = TimeConstant.DATETIME_FORMAT)
     private Date ctime;
 
 
