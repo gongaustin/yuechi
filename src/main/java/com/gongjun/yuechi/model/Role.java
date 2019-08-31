@@ -51,6 +51,10 @@ public class Role implements Serializable {
      * 科室ID
      */
     private String deptId;
+    /**
+     * 是否禁用（0：禁用；1：启用）
+     * */
+    private Integer status;
 
 
     public String getId() {
@@ -101,6 +105,14 @@ public class Role implements Serializable {
         this.deptId = deptId;
     }
 
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Role{" +
@@ -110,6 +122,7 @@ public class Role implements Serializable {
         ", ctime=" + ctime +
         ", orders=" + orders +
         ", deptId=" + deptId +
+        ", status=" + status +
         "}";
     }
 }
