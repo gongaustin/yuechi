@@ -72,7 +72,7 @@ public class LoginController {
         } catch (Exception err) {
             return new ResponseBean(6001, err.getMessage(), null);
         }
-        return new ResponseBean(200, "login success", ImmutableMap.of("realname",user.getRealname(),"dept",d.getDeptName(),"token",token,"permissions",Objects.requireNonNull(permissions == null ? null : permissions.stream().map(Permission::getPermissionValue).collect(Collectors.toList()))));
+        return new ResponseBean(200, "login success", ImmutableMap.of("realname",user.getRealname(),"dept",d==null?"无":d.getDeptName(),"token",token,"permissions",Objects.requireNonNull(permissions == null ? null : permissions.stream().map(Permission::getPermissionValue).collect(Collectors.toList()))));
 
     }
 }
