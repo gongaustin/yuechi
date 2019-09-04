@@ -3,21 +3,18 @@ package com.gongjun.yuechi.controller;
 
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.ResponseBean;
-import com.gongjun.yuechi.core.utils.Md5;
 import com.gongjun.yuechi.model.Permission;
-import com.gongjun.yuechi.model.User;
 import com.gongjun.yuechi.service.IPermissionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 /**
  * <p>
@@ -30,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "/permission", description = "权限前端控制器接口")
 @RestController
 @RequestMapping("/permission")
+@Validated
 public class PermissionController {
 
     @Autowired
@@ -61,14 +59,14 @@ public class PermissionController {
         return new ResponseBean(HttpStatus.OK.value(),"add success",null);
 
     }
-    @ApiOperation(value = "禁用菜单", notes = "禁用菜单")
+    @ApiOperation(value = "禁用/启用菜单", notes = "禁用/启用菜单")
     @RequiresAuthentication
-    @PostMapping(value = "/forbidden",params = {"id"})
-    public ResponseBean forbiddenPermission(String id){
+    @PostMapping(value = "/forbidden",params = {"id","status"})
+    public ResponseBean forbiddenPermission(String id, @Max(1) @Min(0) Integer status){
 
         Permission p = new Permission();
         p.setId(id);
-        p.setStatus(0);
+        p.setStatus(status);
 
         try {
             this.service.updateById(p);
@@ -76,7 +74,7 @@ public class PermissionController {
             return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
         }
 
-        return new ResponseBean(HttpStatus.OK.value(),"forbidden success",null);
+        return new ResponseBean(HttpStatus.OK.value(),(status == 0?"forbidden":"start")+" success",null);
 
     }
 
