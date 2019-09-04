@@ -29,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("")
-@Api(value = "/", description = "测试接口")
+@Api(value = "测试接口", description = "测试接口")
 public class ABCController{
     @Resource
     private ITestService service;

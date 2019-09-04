@@ -25,7 +25,7 @@ import java.util.List;
  * @author GongJun
  * @since 2019-08-28
  */
-@Api(value = "/dept", description = "部门科室前端控制器接口")
+@Api(value = "部门科室前端控制器接口", description = "部门科室前端控制器接口")
 @RestController
 @RequestMapping("/dept")
 public class DeptController {
