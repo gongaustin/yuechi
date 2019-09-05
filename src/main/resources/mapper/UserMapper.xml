@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gongjun.yuechi.mapper.UserMapper">
 
-    <select id="selectUserPermissionsById" resultType="com.gongjun.yuechi.model.Permission">
+    <select id="selectUserPermissionsByWrapper" resultType="com.gongjun.yuechi.model.Permission">
         SELECT
         DISTINCT up.*
         FROM
@@ -10,9 +10,8 @@
             LEFT JOIN upms_role_permission urp ON urp.`permission_id` = up.`id`
             LEFT JOIN upms_role ur ON ur.`id` = urp.`role_id`
             LEFT JOIN upms_user_role uur ON uur.`role_id` = ur.`id`
-        WHERE
-            uur.`user_id` = '${userid}'
-        AND up.status = 1
+        WHERE 1 = 1
+            ${ew.sqlSegment}
         ORDER BY
             up.`orders`
     </select>

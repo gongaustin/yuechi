@@ -2,6 +2,7 @@ package com.gongjun.yuechi.controller;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.core.utils.JWTUtil;
 import com.gongjun.yuechi.core.utils.Md5;
@@ -13,6 +14,7 @@ import com.gongjun.yuechi.service.IPermissionService;
 import com.gongjun.yuechi.service.IUserPermissionService;
 import com.gongjun.yuechi.service.IUserService;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -64,7 +66,11 @@ public class LoginController {
         }
         String token;
         //查询权限值
-        List<Permission> permissions = this.service.selectUserPermissionsById(user.getId());
+        Wrapper ew = new EntityWrapper().and("uur.user_id={0}",user.getId());
+        if(!"admin".equals(username)){
+            ew.and("up.status={0}",1).and("ur.status={0}",1);
+        }
+        List<Permission> permissions = this.service.selectUserPermissionsByWrapper(ew);
         //查询部门
         Dept d = this.dservice.selectOne(new EntityWrapper<Dept>().where("id={0}",user.getDeptId()));
         try {

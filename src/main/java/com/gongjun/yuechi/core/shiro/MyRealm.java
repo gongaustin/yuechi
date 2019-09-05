@@ -1,5 +1,7 @@
 package com.gongjun.yuechi.core.shiro;
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gongjun.yuechi.core.utils.JWTUtil;
 import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.model.User;
@@ -46,8 +48,13 @@ public class MyRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String id = JWTUtil.getUserId(principals.toString());
+        String username = JWTUtil.getUsername(principals.toString());
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        List<Permission> permissions = this.service.selectUserPermissionsById(id);
+        Wrapper ew = new EntityWrapper().and("uur.user_id={0}",id);
+        if(!"admin".equals(username)){
+            ew.and("up.status={0}",1).and("ur.status={0}",1);
+        }
+        List<Permission> permissions = this.service.selectUserPermissionsByWrapper(ew);
         Set<String> permission = new HashSet<>(Objects.requireNonNull(permissions == null ? null : permissions.stream().map(Permission::getPermissionValue).collect(Collectors.toList())));
         simpleAuthorizationInfo.addStringPermissions(permission);
         return simpleAuthorizationInfo;

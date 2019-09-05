@@ -1,5 +1,6 @@
 package com.gongjun.yuechi.mapper;
 
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.model.User;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
@@ -19,6 +20,6 @@ import java.util.List;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    List<Permission> selectUserPermissionsById(@Param("userid") String userid);
+    List<Permission> selectUserPermissionsByWrapper(@Param("ew") Wrapper wrapper);
 
 }

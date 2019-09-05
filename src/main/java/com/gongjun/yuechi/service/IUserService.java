@@ -1,5 +1,6 @@
 package com.gongjun.yuechi.service;
 
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gongjun.yuechi.core.bean.UserBean;
 import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.model.User;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 public interface IUserService extends IService<User> {
 
-    List<Permission> selectUserPermissionsById(String userid);
+    List<Permission> selectUserPermissionsByWrapper(Wrapper wrapper);
 
     UserBean getUser(String username);
 

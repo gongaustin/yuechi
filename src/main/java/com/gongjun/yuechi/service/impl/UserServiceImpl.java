@@ -1,5 +1,6 @@
 package com.gongjun.yuechi.service.impl;
 
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.gongjun.yuechi.core.bean.UserBean;
 import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.model.User;
@@ -23,8 +24,8 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Override
-    public List<Permission> selectUserPermissionsById(String userid) {
-        return userid==null?null:this.baseMapper.selectUserPermissionsById(userid);
+    public List<Permission> selectUserPermissionsByWrapper(Wrapper wrapper) {
+        return this.baseMapper.selectUserPermissionsByWrapper(wrapper);
     }
 
     @Override
