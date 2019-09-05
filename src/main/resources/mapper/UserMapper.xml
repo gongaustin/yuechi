@@ -12,6 +12,7 @@
             LEFT JOIN upms_user_role uur ON uur.`role_id` = ur.`id`
         WHERE
             uur.`user_id` = '${userid}'
+        AND up.status = 1
         ORDER BY
             up.`orders`
     </select>
