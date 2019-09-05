@@ -4,16 +4,32 @@
 
     <select id="selectUserPermissionsByWrapper" resultType="com.gongjun.yuechi.model.Permission">
         SELECT
-        DISTINCT up.*
+            *
         FROM
-            upms_permission up
-            LEFT JOIN upms_role_permission urp ON urp.`permission_id` = up.`id`
-            LEFT JOIN upms_role ur ON ur.`id` = urp.`role_id`
-            LEFT JOIN upms_user_role uur ON uur.`role_id` = ur.`id`
-        WHERE 1 = 1
-            ${ew.sqlSegment}
+            (
+            SELECT DISTINCT
+                up.*
+            FROM
+                upms_permission up
+                LEFT JOIN upms_role_permission urp ON urp.`permission_id` = up.`id`
+                LEFT JOIN upms_role ur ON ur.`id` = urp.`role_id`
+                LEFT JOIN upms_user_role uur ON uur.`role_id` = ur.`id`
+            WHERE
+                1 = 1
+                ${ew.sqlSegment}
+                UNION
+            SELECT DISTINCT
+                up.*
+            FROM
+                upms_permission up
+                LEFT JOIN upms_user_permission uur ON uur.`permission_id` = up.`id`
+                LEFT JOIN upms_role ur ON 1 = 1
+             WHERE
+                1 = 1
+                ${ew.sqlSegment}
+            ) a
         ORDER BY
-            up.`orders`
+            a.orders
     </select>
 
 </mapper>
