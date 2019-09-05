@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.service.IPermissionService;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -40,7 +41,7 @@ public class PermissionController {
     @RequiresAuthentication
     @GetMapping("/page")
     public ResponseBean selectPermissionPage(Page<Permission> page){
-
+        page.setAscs(Lists.newArrayList("orders"));
         Page<Permission> permissions = this.service.selectPage(page);
         return new ResponseBean(HttpStatus.OK.value(),"",permissions);
     }
@@ -74,7 +75,7 @@ public class PermissionController {
             return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
         }
 
-        return new ResponseBean(HttpStatus.OK.value(),(status == 0?"forbidden":"start")+" success",null);
+        return new ResponseBean(HttpStatus.OK.value(),(status == 0?"disable":"enable")+" success",null);
 
     }
 

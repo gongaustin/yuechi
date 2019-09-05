@@ -100,7 +100,7 @@ public class RoleController {
             return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
         }
 
-        return new ResponseBean(HttpStatus.OK.value(), (status == 0 ? "forbidden" : "start") + " success", null);
+        return new ResponseBean(HttpStatus.OK.value(), (status == 0 ? "disable":"enable") + " success", null);
 
     }
 
