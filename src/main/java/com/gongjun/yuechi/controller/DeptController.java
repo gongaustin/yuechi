@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,6 +21,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +39,7 @@ import java.util.List;
 @Api(value = "部门科室前端控制器接口", description = "部门科室前端控制器接口")
 @RestController
 @RequestMapping("/dept")
+@Validated
 public class DeptController {
 
     @Autowired
@@ -50,6 +56,54 @@ public class DeptController {
 
 
         return new ResponseBean(200,"",userList);
+    }
+
+    @ApiOperation(value = "添加科室", notes = "添加科室")
+    @RequiresAuthentication
+    @GetMapping(value = "/add")
+    public ResponseBean add(Dept dept){
+
+        return null;
+
+
+    }
+
+
+    @ApiOperation(value = "删除科室", notes = "删除科室")
+    @RequiresAuthentication
+    @GetMapping(value = "/delete")
+    public ResponseBean delete(String id){
+
+        return null;
+
+
+    }
+
+
+    @ApiOperation(value = "修改科室信息", notes = "修改科室信息")
+    @RequiresAuthentication
+    @GetMapping(value = "/edit",params = {"id","deptName"})
+    public ResponseBean delete(Dept dept){
+
+        return null;
+
+    }
+
+
+    @ApiOperation(value = "禁用/启用科室", notes = "禁用/启用科室")
+    @RequiresAuthentication
+    @GetMapping(value = "/forbidden",params = {"id","status"})
+    public ResponseBean delete(@NotBlank String id, @Max(1) @Min(0) Integer status){
+        Dept dept = new Dept();
+        dept.setId(id);
+        dept.setStatus(status);
+        try {
+            this.service.updateById(dept);
+        } catch (Exception e) {
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+        return new ResponseBean(HttpStatus.OK.value(),(status == 0?"disable":"enable")+" success",null);
+
     }
 
 
