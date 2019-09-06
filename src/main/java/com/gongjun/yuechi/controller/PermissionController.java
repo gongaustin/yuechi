@@ -1,6 +1,7 @@
 package com.gongjun.yuechi.controller;
 
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.model.Permission;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.List;
 
 /**
  * <p>
@@ -91,6 +93,21 @@ public class PermissionController {
         }
 
         return new ResponseBean(HttpStatus.OK.value(),"delete success",null);
+
+    }
+
+    @ApiOperation(value = "查询所有已启用的菜单", notes = "查询所有已启用的菜单")
+    @RequiresAuthentication
+    @GetMapping(value = "/getAllEnabled")
+    public ResponseBean getAllEnabled(String id){
+        List permissions;
+        try {
+            permissions = this.service.selectList(new EntityWrapper<Permission>().where("status={0}",1).orderAsc(Lists.newArrayList("orders")));
+        } catch (Exception e) {
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+
+        return new ResponseBean(HttpStatus.OK.value(),"find success",permissions);
 
     }
 
