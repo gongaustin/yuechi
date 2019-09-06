@@ -4,6 +4,7 @@ package com.gongjun.yuechi.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.ResponseBean;
+import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.model.Role;
 import com.gongjun.yuechi.model.RolePermission;
 import com.gongjun.yuechi.service.IRolePermissionService;
@@ -139,6 +140,20 @@ public class RoleController {
             return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
         }
         return new ResponseBean(HttpStatus.OK.value(), "add success", null);
+    }
+
+    @ApiOperation(value = "根据角色ID查询已经拥有的菜单ID的数组", notes = "根据角色ID查询已经拥有的菜单ID的数组")
+    @RequiresAuthentication
+    @GetMapping(value = "/getPermissionsByRoleId",params = {"id"})
+    public ResponseBean getPermissionsByRoleId(@NotNull String id) {
+        List<String> ids = Lists.newArrayList();
+        try {
+            List<Permission> permissions = this.service.getPermissionsByRoleId(id);
+            if(!CollectionUtils.isEmpty(permissions)) ids = permissions.stream().map(Permission::getId).collect(Collectors.toList());
+        } catch (Exception e){
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+        return new ResponseBean(HttpStatus.OK.value(),"find success",ids);
     }
 }
 

@@ -1,10 +1,13 @@
 package com.gongjun.yuechi.service.impl;
 
+import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.model.Role;
 import com.gongjun.yuechi.mapper.RoleMapper;
 import com.gongjun.yuechi.service.IRoleService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -17,4 +20,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
+    @Override
+    public List<Permission> getPermissionsByRoleId(String id) {
+        return this.baseMapper.getPermissionsByRoleId(id);
+    }
 }
