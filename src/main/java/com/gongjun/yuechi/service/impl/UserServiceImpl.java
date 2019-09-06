@@ -1,10 +1,12 @@
 package com.gongjun.yuechi.service.impl;
 
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.UserBean;
 import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.model.User;
 import com.gongjun.yuechi.mapper.UserMapper;
+import com.gongjun.yuechi.model.vo.UserVo;
 import com.gongjun.yuechi.service.IUserService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
@@ -32,5 +34,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public UserBean getUser(String username) {
         UserBean ub = new UserBean();
         return null;
+    }
+
+    @Override
+    public List<UserVo> selectUserVoPage(Page page, Wrapper wrapper) {
+        return this.baseMapper.selectUserVoPage(page,wrapper);
+    }
+
+    @Override
+    public UserVo findUserById(String id) {
+        return this.baseMapper.findUserById(id);
     }
 }

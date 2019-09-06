@@ -1,13 +1,16 @@
 package com.gongjun.yuechi.controller;
 
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.core.utils.Md5;
 import com.gongjun.yuechi.model.User;
+import com.gongjun.yuechi.model.vo.UserVo;
 import com.gongjun.yuechi.service.IUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * <p>
@@ -40,13 +45,22 @@ public class UserController {
     @ApiOperation(value = "分页查询用户", notes = "分页查询用户")
     @RequiresAuthentication
     @GetMapping("/page")
-    public ResponseBean selectUserPage(Page<User> page){
+    public ResponseBean selectUserPage(Page page,String keyword){
 
-        Page<User> users = this.service.selectPage(page);
-        if(!CollectionUtils.isEmpty(users.getRecords())){
-            users.getRecords().forEach(e->{e.setPassword(null);e.setSalt(null);});
+        EntityWrapper ew  = new EntityWrapper();
+
+        if(StringUtils.isNotBlank(keyword)){
+            ew.like("uu.username",keyword)
+                    .or("uu.realname like{0}","%"+keyword+"%")
+                    .or("uu.position like{0}","%"+keyword+"%")
+                    .or("ud.dept_name like{0}","%"+keyword+"%");
         }
-        return new ResponseBean(HttpStatus.OK.value(),"",users);
+        List<UserVo> users = this.service.selectUserVoPage(page,ew);
+        if(!CollectionUtils.isEmpty(users)){
+            users.forEach(e->{e.setPassword(null);e.setSalt(null);});
+        }
+        page.setRecords(users);
+        return new ResponseBean(HttpStatus.OK.value(),"",page);
     }
 
     @ApiOperation(value = "添加用户", notes = "添加用户")
@@ -81,9 +95,34 @@ public class UserController {
 
     }
 
+    @ApiOperation(value = "查询单个用户", notes = "查询单个用户")
+    @RequiresAuthentication
+    @GetMapping(value = "/findUserById",params = {"id"})
+    public ResponseBean findUserById(String id){
 
+        UserVo user;
+        try {
+            user = this.service.findUserById(id);
+            if(null != user) user.setPassword(null); user.setSalt(null);
+        } catch (Exception e) {
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+        return new ResponseBean(HttpStatus.OK.value(),"select success",user);
 
+    }
 
+    @ApiOperation(value = "编辑用户", notes = "编辑用户")
+    @RequiresAuthentication
+    @GetMapping(value = "/edit",params = {"id","username"})
+    public ResponseBean editUser(User user){
+        try {
+            this.service.updateById(user);
+        } catch (Exception e) {
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+        return new ResponseBean(HttpStatus.OK.value(),"edit success",user);
+
+    }
 
 }
 

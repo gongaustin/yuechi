@@ -32,4 +32,30 @@
             a.orders
     </select>
 
+    <select id="selectUserVoPage" resultType="com.gongjun.yuechi.model.vo.UserVo">
+        SELECT
+            uu.*,
+            ud.`dept_name`
+        FROM
+            upms_user uu
+            LEFT JOIN upms_dept ud ON ud.`id` = uu.`dept_id`
+        WHERE 1 = 1
+         ${ew.sqlSegment}
+        ORDER BY
+            uu.`ctime` DESC
+
+    </select>
+
+    <select id="findUserById" resultType="com.gongjun.yuechi.model.vo.UserVo">
+        SELECT
+            uu.*,
+            ud.`dept_name`
+        FROM
+            upms_user uu
+            LEFT JOIN upms_dept ud ON ud.`id` = uu.`dept_id`
+        WHERE 1 = 1
+        AND uu.`id` = '${id}'
+
+    </select>
+
 </mapper>

@@ -1,9 +1,11 @@
 package com.gongjun.yuechi.mapper;
 
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.model.User;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.gongjun.yuechi.model.vo.UserVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,5 +23,10 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
     List<Permission> selectUserPermissionsByWrapper(@Param("ew") Wrapper wrapper);
+
+    List<UserVo> selectUserVoPage(Page page, @Param("ew") Wrapper wrapper);
+
+    UserVo findUserById(@Param("id") String id);
+
 
 }

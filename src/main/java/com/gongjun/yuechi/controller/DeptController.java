@@ -1,12 +1,18 @@
 package com.gongjun.yuechi.controller;
 
 
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.model.Dept;
 import com.gongjun.yuechi.model.User;
+import com.gongjun.yuechi.model.vo.UserVo;
 import com.gongjun.yuechi.service.IDeptService;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -44,6 +50,22 @@ public class DeptController {
 
 
         return new ResponseBean(200,"",userList);
+    }
+
+
+    @ApiOperation(value = "查询所有已启用的科室", notes = "查询所有已启用的科室")
+    @RequiresAuthentication
+    @GetMapping(value = "/selectAllEnableDept")
+    public ResponseBean selectAllEnableDept(String id){
+
+        List<Dept> depts;
+        try {
+            depts = this.service.selectList(new EntityWrapper<Dept>().where("status={0}",1).and("degree={0}",2).orderDesc(Lists.newArrayList("ctime")));
+        } catch (Exception e) {
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+        return new ResponseBean(HttpStatus.OK.value(),"select success",depts);
+
     }
 
 }
