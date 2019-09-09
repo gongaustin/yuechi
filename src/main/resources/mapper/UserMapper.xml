@@ -58,4 +58,17 @@
 
     </select>
 
+    <select id="getRolesByManagerId" resultType="com.gongjun.yuechi.model.Role">
+        SELECT
+        DISTINCT
+            ur.*
+        FROM
+            upms_role ur
+            LEFT JOIN upms_user_role uur ON uur.`role_id`
+        WHERE
+            uur.`user_id` = '${id}'
+        ORDER BY
+           ur.`orders`
+    </select>
+
 </mapper>

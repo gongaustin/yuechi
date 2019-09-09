@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.UserBean;
 import com.gongjun.yuechi.model.Permission;
+import com.gongjun.yuechi.model.Role;
 import com.gongjun.yuechi.model.User;
 import com.baomidou.mybatisplus.service.IService;
 import com.gongjun.yuechi.model.vo.UserVo;
@@ -27,5 +28,7 @@ public interface IUserService extends IService<User> {
     List<UserVo> selectUserVoPage(Page page,Wrapper wrapper);
 
     UserVo findUserById(String id);
+
+    List<Role> getRolesByManagerId(String id);
 
 }

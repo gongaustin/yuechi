@@ -3,6 +3,7 @@ package com.gongjun.yuechi.mapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.model.Permission;
+import com.gongjun.yuechi.model.Role;
 import com.gongjun.yuechi.model.User;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
 import com.gongjun.yuechi.model.vo.UserVo;
@@ -27,6 +28,8 @@ public interface UserMapper extends BaseMapper<User> {
     List<UserVo> selectUserVoPage(Page page, @Param("ew") Wrapper wrapper);
 
     UserVo findUserById(@Param("id") String id);
+
+    List<Role> getRolesByManagerId(@Param("id") String id);
 
 
 }

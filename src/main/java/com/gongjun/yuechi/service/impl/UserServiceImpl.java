@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.UserBean;
 import com.gongjun.yuechi.model.Permission;
+import com.gongjun.yuechi.model.Role;
 import com.gongjun.yuechi.model.User;
 import com.gongjun.yuechi.mapper.UserMapper;
 import com.gongjun.yuechi.model.vo.UserVo;
@@ -44,5 +45,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public UserVo findUserById(String id) {
         return this.baseMapper.findUserById(id);
+    }
+
+    @Override
+    public List<Role> getRolesByManagerId(String id) {
+        return this.baseMapper.getRolesByManagerId(id);
     }
 }
