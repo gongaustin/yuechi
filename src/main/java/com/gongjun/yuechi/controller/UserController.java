@@ -3,6 +3,7 @@ package com.gongjun.yuechi.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.baomidou.mybatisplus.toolkit.IdWorker;
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.core.utils.Md5;
 import com.gongjun.yuechi.model.User;
@@ -67,7 +68,7 @@ public class UserController {
     @RequiresAuthentication
     @PostMapping(value = "/add",params = {"username","password"})
     public ResponseBean addUser(User user){
-
+        user.setUsername(IdWorker.getIdStr());
         String passwordMD5 = Md5.md5Encode(user.getPassword()==null?"123456":user.getPassword());
 
         user.setPassword(passwordMD5);
