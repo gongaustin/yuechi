@@ -66,7 +66,7 @@ public class UserController {
 
     @ApiOperation(value = "添加用户", notes = "添加用户")
     @RequiresAuthentication
-    @PostMapping(value = "/add",params = {"username","password"})
+    @PostMapping(value = "/add",params = {"realname"})
     public ResponseBean addUser(User user){
         user.setUsername(IdWorker.getIdStr());
         String passwordMD5 = Md5.md5Encode(user.getPassword()==null?"123456":user.getPassword());
@@ -114,7 +114,7 @@ public class UserController {
 
     @ApiOperation(value = "编辑用户", notes = "编辑用户")
     @RequiresAuthentication
-    @GetMapping(value = "/edit",params = {"id","username"})
+    @GetMapping(value = "/edit",params = {"id"})
     public ResponseBean editUser(User user){
         try {
             this.service.updateById(user);
