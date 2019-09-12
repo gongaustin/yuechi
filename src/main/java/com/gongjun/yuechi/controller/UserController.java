@@ -114,7 +114,7 @@ public class UserController {
 
     @ApiOperation(value = "编辑用户", notes = "编辑用户")
     @RequiresAuthentication
-    @GetMapping(value = "/edit",params = {"id"})
+    @PostMapping(value = "/edit",params = {"id"})
     public ResponseBean editUser(User user){
         try {
             this.service.updateById(user);
