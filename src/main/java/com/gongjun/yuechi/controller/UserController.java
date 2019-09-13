@@ -51,8 +51,7 @@ public class UserController {
         EntityWrapper ew  = new EntityWrapper();
 
         if(StringUtils.isNotBlank(keyword)){
-            ew.like("uu.username",keyword)
-                    .or("uu.realname like{0}","%"+keyword+"%")
+            ew.like("uu.realname",keyword)
                     .or("uu.position like{0}","%"+keyword+"%")
                     .or("ud.dept_name like{0}","%"+keyword+"%");
         }
@@ -68,7 +67,7 @@ public class UserController {
     @RequiresAuthentication
     @PostMapping(value = "/add",params = {"realname"})
     public ResponseBean addUser(User user){
-        user.setUsername(IdWorker.getIdStr());
+        user.setUsername(IdWorker.getIdStr());//非管理员直接默认一个账号
         String passwordMD5 = Md5.md5Encode(user.getPassword()==null?"123456":user.getPassword());
 
         user.setPassword(passwordMD5);

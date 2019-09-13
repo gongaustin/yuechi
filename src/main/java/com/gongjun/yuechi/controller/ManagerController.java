@@ -3,7 +3,9 @@ package com.gongjun.yuechi.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.ResponseBean;
+import com.gongjun.yuechi.core.utils.Md5;
 import com.gongjun.yuechi.model.*;
+import com.gongjun.yuechi.model.vo.UserVo;
 import com.gongjun.yuechi.service.IUserRoleService;
 import com.gongjun.yuechi.service.IUserService;
 import com.google.common.collect.Lists;
@@ -55,14 +57,19 @@ public class ManagerController {
     public ResponseBean selectManagerPage(Page page, String keyword){
 
         EntityWrapper ew  = new EntityWrapper();
-
+        ew.and("uu.backup={0}","管理员");
         if(StringUtils.isNotBlank(keyword)){
             ew.like("uu.username",keyword)
                     .or("uu.realname like{0}","%"+keyword+"%")
                     .or("uu.position like{0}","%"+keyword+"%")
                     .or("ud.dept_name like{0}","%"+keyword+"%");
         }
-        return null;
+        List<UserVo> users = this.service.selectUserVoPage(page,ew);
+        if(!CollectionUtils.isEmpty(users)){
+            users.forEach(e->{e.setPassword(null);e.setSalt(null);});
+        }
+        page.setRecords(users);
+        return new ResponseBean(HttpStatus.OK.value(),"",page);
     }
 
 
@@ -76,7 +83,7 @@ public class ManagerController {
 
     @ApiOperation(value = "添加管理员", notes = "添加管理员")
     @RequiresAuthentication
-    @PostMapping(value = "/add", params = {"name", "description", "backup"})
+    @PostMapping(value = "/add", params = {"username","password"})
     public ResponseBean addRole(User user) {
 
         user.setBackup("管理员");
@@ -89,6 +96,24 @@ public class ManagerController {
 
         return new ResponseBean(HttpStatus.OK.value(), "add success", null);
 
+    }
+
+    @ApiOperation(value = "编辑管理员", notes = "编辑管理员")
+    @RequiresAuthentication
+    @PostMapping(value = "/edit",params = {"id"})
+    public ResponseBean editUser(User user){
+        String password = user.getPassword();
+        if(StringUtils.isNotBlank(password)){
+            String passwordMD5 = Md5.md5Encode(password);
+            user.setPassword(passwordMD5);
+            user.setSalt(passwordMD5);
+        }
+        try {
+            this.service.updateById(user);
+        } catch (Exception e) {
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+        return new ResponseBean(HttpStatus.OK.value(),"edit success",user);
     }
 
     @ApiOperation(value = "禁用/启用管理员", notes = "禁用/启用管理员")
@@ -159,6 +184,5 @@ public class ManagerController {
         }
         return new ResponseBean(HttpStatus.OK.value(),"find success",ids);
     }
-
-
+    
 }
