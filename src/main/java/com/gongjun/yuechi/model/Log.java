@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @author GongJun
  * @since 2019-08-28
  */
-@TableName("upms_log")
+@TableName("sys_log")
 public class Log implements Serializable {
 
     private static final long serialVersionUID = 1L;

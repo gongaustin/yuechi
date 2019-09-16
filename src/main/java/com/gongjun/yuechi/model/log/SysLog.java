@@ -3,35 +3,94 @@ package com.gongjun.yuechi.model.log;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 
-import java.util.Date;
+import java.io.Serializable;
 
 /**
- * Author:GongJun
- * Date:2019/1/17
+ * <p>
+ * 操作日志表
+ * </p>
+ *
+ * @author GongJun
+ * @since 2019-08-28
  */
-@TableName("syslog")
-public class SysLog {
-    @TableId
-    private Long id;
-    private String username; //用户名
+@TableName("sys_log")
+public class SysLog implements Serializable {
 
-    private String operation; //操作
+    private static final long serialVersionUID = 1L;
 
-    private String method; //方法名
+    /**
+     * 编号
+     */
+    @TableId(value = "id", type = IdType.UUID)
+    private String id;
+    /**
+     * 操作描述
+     */
+    private String description;
+    /**
+     * 操作用户
+     */
+    private String username;
+    /**
+     * 操作时间
+     */
+    @TableField("start_time")
+    private Long startTime;
+    /**
+     * 消耗时间
+     */
+    @TableField("spend_time")
+    private Integer spendTime;
+    /**
+     * 根路径
+     */
+    @TableField("base_path")
+    private String basePath;
+    /**
+     * URI
+     */
+    private String uri;
+    /**
+     * URL
+     */
+    private String url;
+    /**
+     * 请求类型
+     */
+    private String method;
+    private String parameter;
+    /**
+     * 用户标识
+     */
+    @TableField("user_agent")
+    private String userAgent;
+    /**
+     * IP地址
+     */
+    private String ip;
+    private String result;
+    /**
+     * 权限值
+     */
+    private String permissions;
 
-    private String params; //参数
 
-    private String ip; //ip地址
-    @TableField("operate_time")
-    private Date operateTime; //操作时间
-
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getUsername() {
@@ -42,12 +101,44 @@ public class SysLog {
         this.username = username;
     }
 
-    public String getOperation() {
-        return operation;
+    public Long getStartTime() {
+        return startTime;
     }
 
-    public void setOperation(String operation) {
-        this.operation = operation;
+    public void setStartTime(Long startTime) {
+        this.startTime = startTime;
+    }
+
+    public Integer getSpendTime() {
+        return spendTime;
+    }
+
+    public void setSpendTime(Integer spendTime) {
+        this.spendTime = spendTime;
+    }
+
+    public String getBasePath() {
+        return basePath;
+    }
+
+    public void setBasePath(String basePath) {
+        this.basePath = basePath;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public String getMethod() {
@@ -58,12 +149,20 @@ public class SysLog {
         this.method = method;
     }
 
-    public String getParams() {
-        return params;
+    public String getParameter() {
+        return parameter;
     }
 
-    public void setParams(String params) {
-        this.params = params;
+    public void setParameter(String parameter) {
+        this.parameter = parameter;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 
     public String getIp() {
@@ -74,11 +173,39 @@ public class SysLog {
         this.ip = ip;
     }
 
-    public Date getOperateTime() {
-        return operateTime;
+    public String getResult() {
+        return result;
     }
 
-    public void setOperateTime(Date operateTime) {
-        this.operateTime = operateTime;
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    public String getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(String permissions) {
+        this.permissions = permissions;
+    }
+
+    @Override
+    public String toString() {
+        return "Log{" +
+                ", id=" + id +
+                ", description=" + description +
+                ", username=" + username +
+                ", startTime=" + startTime +
+                ", spendTime=" + spendTime +
+                ", basePath=" + basePath +
+                ", uri=" + uri +
+                ", url=" + url +
+                ", method=" + method +
+                ", parameter=" + parameter +
+                ", userAgent=" + userAgent +
+                ", ip=" + ip +
+                ", result=" + result +
+                ", permissions=" + permissions +
+                "}";
     }
 }

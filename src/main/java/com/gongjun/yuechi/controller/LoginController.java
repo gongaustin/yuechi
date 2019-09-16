@@ -3,6 +3,7 @@ package com.gongjun.yuechi.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.gongjun.yuechi.core.annotation.MyLog;
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.core.utils.JWTUtil;
 import com.gongjun.yuechi.core.utils.Md5;
@@ -52,6 +53,7 @@ public class LoginController {
     @ApiImplicitParams({@ApiImplicitParam(paramType="query",name = "username", value = "用户", required = true, dataType = "String"), @ApiImplicitParam(paramType="query",name = "password", value = "密码", required = true, dataType = "String")})
     @PostMapping(value = "/login")
     @ResponseBody
+    @MyLog("登录")
     public ResponseBean login(String username, String password, Model model) {
         if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
             return new ResponseBean(6001, "username or password empty", null);

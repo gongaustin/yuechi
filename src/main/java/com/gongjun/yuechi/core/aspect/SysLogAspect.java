@@ -3,6 +3,7 @@ package com.gongjun.yuechi.core.aspect;
 import com.alibaba.fastjson.JSON;
 import com.gongjun.yuechi.core.annotation.MyLog;
 import com.gongjun.yuechi.core.utils.IPDeal;
+import com.gongjun.yuechi.core.utils.JWTUtil;
 import com.gongjun.yuechi.model.log.SysLog;
 import com.gongjun.yuechi.service.ISysLogService;
 import org.aspectj.lang.JoinPoint;
@@ -31,7 +32,7 @@ public class SysLogAspect {
     private ISysLogService service;
 
     /**
-     * @param []
+     * @param
      * @return void
      * @description 定义切点 @Pointcut,在注解的位置切入代码
      * @author GongJun
@@ -43,7 +44,7 @@ public class SysLogAspect {
     }
 
     /**
-     * @param [joinPoint]
+     * @param
      * @return void
      * @description
      * @author GongJun
@@ -65,7 +66,7 @@ public class SysLogAspect {
 
         if (myLog != null) {
             String value = myLog.value();
-            sysLog.setOperation(value);//保存获取的操作
+            sysLog.setDescription(value);//保存获取的操作
         }
 
         //获取请求的类名
@@ -78,16 +79,24 @@ public class SysLogAspect {
         Object[] args = joinPoint.getArgs();
         //将参数所在的数组转换成json
         String params = JSON.toJSONString(args);
-        sysLog.setParams(params);
+        sysLog.setParameter(params);
+        sysLog.setStartTime(new Date().getTime());
 
-        sysLog.setOperateTime(new Date());
-        //获取用户名
-        sysLog.setUsername("gongjun");
+
         //获取用户ip地址
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = servletRequestAttributes.getRequest();
+        sysLog.setUri(request.getRequestURI());
+        sysLog.setUrl(request.getRequestURL().toString());
+        sysLog.setBasePath(request.getServletPath());
+        sysLog.setUserAgent(request.getHeader("User-Agent"));
         sysLog.setIp(IPDeal.getIpAddress(request));
-
+        //获取用户名
+        try {
+            sysLog.setUsername(JWTUtil.getUsername());
+        } catch (Exception e) {
+            sysLog.setUsername(request.getParameter("username"));
+        }
         //调用service保存SysLog实体类到数据库
         this.service.insert(sysLog);
         System.out.println("***日志结束***");
