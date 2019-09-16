@@ -87,6 +87,11 @@ public class ManagerController {
     public ResponseBean addRole(User user) {
 
         user.setBackup("管理员");
+        String password = user.getPassword();
+        if(null != password){
+            user.setPassword(Md5.md5Encode(password));
+            user.setSalt(user.getPassword());
+        }
 
         try {
             this.service.insert(user);
