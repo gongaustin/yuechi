@@ -55,7 +55,7 @@ public class DeptController {
                     .or("description like{0}","%"+keyword+"%")
                     .or("dept_no like{0}","%"+keyword+"%");
         }
-        ew.orderAsc(Lists.newArrayList("ctime"));
+        ew.orderDesc(Lists.newArrayList("ctime"));
         try {
             page = this.service.selectPage(page,ew);
         } catch (Exception e) {
