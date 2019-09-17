@@ -4,8 +4,12 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gongjun.yuechi.core.constant.TimeConstant;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -42,6 +46,18 @@ public class Leader implements Serializable {
      */
     @TableField("res_content")
     private String resContent;
+
+    /**
+     * 证件头像(attachment表的ID)
+     */
+    private String photo;
+
+    /**
+     * 创建时间
+     */
+    @JsonFormat(timezone = TimeConstant.TIME_ZONE, pattern = TimeConstant.DATETIME_FORMAT)
+    @DateTimeFormat(pattern = TimeConstant.DATETIME_FORMAT)
+    private Date ctime;
 
 
     public String getId() {
@@ -84,6 +100,23 @@ public class Leader implements Serializable {
         this.resContent = resContent;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public Date getCtime() {
+        return ctime;
+    }
+
+    public void setCtime(Date ctime) {
+        this.ctime = ctime;
+    }
+
+
     @Override
     public String toString() {
         return "Leader{" +
@@ -92,6 +125,8 @@ public class Leader implements Serializable {
         ", position=" + position +
         ", cellphone=" + cellphone +
         ", resContent=" + resContent +
+        ", photo=" + photo +
+        ", ctime=" + ctime +
         "}";
     }
 }

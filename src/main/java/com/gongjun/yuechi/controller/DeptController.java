@@ -2,6 +2,7 @@ package com.gongjun.yuechi.controller;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.model.Dept;
 import com.gongjun.yuechi.model.User;
@@ -10,16 +11,15 @@ import com.gongjun.yuechi.service.IDeptService;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -44,55 +44,89 @@ public class DeptController {
 
     @Autowired
     private IDeptService service;
+    @ApiOperation(value = "分页查询科室", notes = "分页查询科室")
+    @RequiresAuthentication
+    @GetMapping("/page")
+    public ResponseBean page(Page<Dept> page,String keyword){
+        EntityWrapper ew  = new EntityWrapper();
 
-    @GetMapping("")
-    public ResponseBean test(String s){
-        List<Dept> userList = this.service.selectList(null);
-        userList.get(0).setCtime(new Date());
-        this.service.updateById(userList.get(0));
-
-
-
-
-
-        return new ResponseBean(200,"",userList);
+        if(StringUtils.isNotBlank(keyword)){
+            ew.like("dept_name",keyword)
+                    .or("description like{0}","%"+keyword+"%")
+                    .or("dept_no like{0}","%"+keyword+"%");
+        }
+        ew.orderAsc(Lists.newArrayList("ctime"));
+        try {
+            page = this.service.selectPage(page,ew);
+        } catch (Exception e) {
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+        return new ResponseBean(HttpStatus.OK.value(),"",page);
     }
 
     @ApiOperation(value = "添加科室", notes = "添加科室")
     @RequiresAuthentication
-    @GetMapping(value = "/add")
-    public ResponseBean add(Dept dept){
+    @PostMapping(value = "/add",params = {"deptName"})
+    public ResponseBean add(Dept dept,@RequestParam(defaultValue = "岳池县妇幼保健院") String parent){
+        Dept d = this.service.selectOne(new EntityWrapper<Dept>().where("dept_name={0}",parent));
+        dept.setpId(d==null?null:d.getId());
+        dept.setCtime(new Date());
+        dept.setDegree((d.getDegree()==null?0:d.getDegree())+1);
+        try {
+            this.service.insert(dept);
+        } catch (Exception e) {
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+        return new ResponseBean(HttpStatus.OK.value(),"add success",null);
+    }
 
-        return null;
-
-
+    @ApiOperation(value = "ID查询科室信息", notes = "ID查询科室信息")
+    @RequiresAuthentication
+    @GetMapping(value = "/findDeptById",params = {"id"})
+    public ResponseBean findDeptById(String id){
+        Dept dept;
+        try {
+            dept = this.service.selectById(id);
+        } catch (Exception e) {
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+        return new ResponseBean(HttpStatus.OK.value(),"find success",dept);
     }
 
 
     @ApiOperation(value = "删除科室", notes = "删除科室")
     @RequiresAuthentication
-    @GetMapping(value = "/delete")
+    @PostMapping(value = "/delete",params = {"id"})
     public ResponseBean delete(String id){
 
-        return null;
-
+        try {
+            this.service.deleteById(id);
+        } catch (Exception e) {
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+        return new ResponseBean(HttpStatus.OK.value(),"delete success",null);
 
     }
 
 
     @ApiOperation(value = "修改科室信息", notes = "修改科室信息")
     @RequiresAuthentication
-    @GetMapping(value = "/edit",params = {"id","deptName"})
+    @PostMapping(value = "/edit",params = {"id"})
     public ResponseBean delete(Dept dept){
 
-        return null;
+        try {
+            this.service.updateById(dept);
+        } catch (Exception e) {
+            return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+        }
+        return new ResponseBean(HttpStatus.OK.value(),"update success",null);
 
     }
 
 
     @ApiOperation(value = "禁用/启用科室", notes = "禁用/启用科室")
     @RequiresAuthentication
-    @GetMapping(value = "/forbidden",params = {"id","status"})
+    @PostMapping(value = "/forbidden",params = {"id","status"})
     public ResponseBean delete(@NotBlank String id, @Max(1) @Min(0) Integer status){
         Dept dept = new Dept();
         dept.setId(id);
