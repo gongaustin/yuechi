@@ -2,6 +2,7 @@ package com.gongjun.yuechi.service.impl;
 
 import com.gongjun.yuechi.model.Leader;
 import com.gongjun.yuechi.mapper.LeaderMapper;
+import com.gongjun.yuechi.model.vo.LeaderVo;
 import com.gongjun.yuechi.service.ILeaderService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
@@ -17,4 +18,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class LeaderServiceImpl extends ServiceImpl<LeaderMapper, Leader> implements ILeaderService {
 
+    @Override
+    public LeaderVo findLeaderById(String id) {
+        return this.baseMapper.findLeaderById(id);
+    }
 }

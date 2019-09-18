@@ -59,6 +59,16 @@ public class Leader implements Serializable {
     @DateTimeFormat(pattern = TimeConstant.DATETIME_FORMAT)
     private Date ctime;
 
+    /**
+     * 排序
+     */
+    private Integer order;
+
+    /**
+     * 备用字段
+     */
+    private String backup;
+
 
     public String getId() {
         return id;
@@ -116,6 +126,21 @@ public class Leader implements Serializable {
         this.ctime = ctime;
     }
 
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
+    }
+
+    public String getBackup() {
+        return backup;
+    }
+
+    public void setBackup(String backup) {
+        this.backup = backup;
+    }
 
     @Override
     public String toString() {
@@ -127,6 +152,8 @@ public class Leader implements Serializable {
         ", resContent=" + resContent +
         ", photo=" + photo +
         ", ctime=" + ctime +
+        ", order=" + order +
+        ", backup=" + backup +
         "}";
     }
 }

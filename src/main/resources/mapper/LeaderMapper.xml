@@ -2,4 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gongjun.yuechi.mapper.LeaderMapper">
 
+    <select id="findLeaderById" resultType="com.gongjun.yuechi.model.vo.LeaderVo">
+        SELECT
+            bl.*,
+            ba.`url` AS photoImg
+        FROM
+            busi_leader bl
+            LEFT JOIN busi_attachment ba ON ba.`id` = bl.`photo`
+        WHERE bl.`id` = '${id}'
+    </select>
+
 </mapper>
