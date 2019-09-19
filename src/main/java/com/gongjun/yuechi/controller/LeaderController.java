@@ -8,12 +8,14 @@ import com.gongjun.yuechi.core.utils.FileTools;
 import com.gongjun.yuechi.model.Leader;
 import com.gongjun.yuechi.model.Propose;
 import com.gongjun.yuechi.model.vo.LeaderVo;
+import com.gongjun.yuechi.service.IAttachmentService;
 import com.gongjun.yuechi.service.ILeaderService;
 import com.gongjun.yuechi.service.IProposeService;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -89,11 +91,17 @@ public class LeaderController {
 
     }
 
+    @Autowired
+    IAttachmentService atservice;
+
     @ApiOperation(value = "添加领导人", notes = "添加领导人")
     @RequiresAuthentication
-    @PostMapping(value = "/add",params = {"id"})
-    public ResponseBean add(@RequestPart("files") MultipartFile files, Leader leader){
+    @PostMapping(value = "/add",params = {"name"})
+    public ResponseBean add(@RequestPart("files") MultipartFile[] files, Leader leader){
         try {
+            String s= null;
+            List<String> ids = this.atservice.upload(files,s);
+            if(!CollectionUtils.isEmpty(ids)) leader.setPhoto(ids.get(0));
             this.service.insert(leader);
         } catch (Exception e) {
             return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
@@ -107,8 +115,13 @@ public class LeaderController {
     @ApiOperation(value = "修改领导人", notes = "修改领导人")
     @RequiresAuthentication
     @PostMapping(value = "/edit",params = {"id"})
-    public ResponseBean edit(Leader leader){
+    public ResponseBean edit(@RequestPart("files") MultipartFile[] files,Leader leader){
         try {
+            if(null != files){
+                String s= null;
+                List<String> ids = this.atservice.upload(files,s);
+                if(!CollectionUtils.isEmpty(ids)) leader.setPhoto(ids.get(0));
+            }
             this.service.updateById(leader);
         } catch (Exception e) {
             return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
@@ -129,78 +142,5 @@ public class LeaderController {
         return new ResponseBean(HttpStatus.OK.value(),"delete success",null);
 
     }
-
-
-
-    /**
-     * 校验文件
-     * @param token
-     * @param mltfile
-     * @param response
-     * @return
-     */
-    private Boolean checkFile(String token, MultipartFile mltfile, ResponseBean response) throws IOException {
-        Boolean flag = false;
-        // 大小
-        long fileSize = mltfile.getSize();
-        if (fileSize > 20*1024*1024) {
-            response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMsg("file is too big");
-            flag = true;
-            return flag;
-        }
-
-        // 校验文件名是否包含特殊字符
-        String fileName = mltfile.getOriginalFilename();
-        String fileNameSub = fileName.substring(0, fileName.lastIndexOf("."));
-        // String regEx1 =  "<script[\s\s]+</script *>";
-        String regEx = "^[a-zA-Z0-9\u4E00-\u9FA5 .。_-]+$";
-        Pattern p = Pattern.compile(regEx);
-        Matcher m = p.matcher(fileNameSub);
-        if (!m.matches()) {
-            response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMsg("file name is not legal");
-            flag = true;
-            return flag;
-        }
-        // 头文件校验后缀
-        String type = FileTools.getCorrectType(mltfile);
-        if(type == null){
-            response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMsg("file type is not enable");
-            flag = true;
-            return flag;
-        }
-
-        String fileEnd = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
-        List<String> endList = new ArrayList<>();
-        endList.add("doc");
-        endList.add("docx");
-        endList.add("docm");
-        endList.add("dotx");
-        endList.add("dotm");
-        endList.add("xls");
-        endList.add("xlsx");
-        endList.add("xltx");
-        endList.add("xltm");
-        endList.add("xlsb");
-        endList.add("xlam");
-        endList.add("ppt");
-        endList.add("pptx");
-        endList.add("ppsx");
-        endList.add("potx");
-        endList.add("potm");
-        endList.add("ppam");
-        endList.add("ppsm");
-        endList.add("pdf");
-        if (!endList.contains(fileEnd)) {
-            response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            response.setMsg("file format is not enable");
-            flag = true;
-            return flag;
-        }
-        return flag;
-    }
-
 }
 
