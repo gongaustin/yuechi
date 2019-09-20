@@ -46,6 +46,7 @@ public class AttachmentController {
     @ApiOperation(value = "附件上传接口（单独）", notes = "附件上传接口（单独）")
     @CrossOrigin
     public ResponseBean upload(@RequestPart("files") MultipartFile[] files) throws Exception{
+        if(files.length==0) return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),"file is empty or cannot read file",null);
         List<Attachment> ats = this.service.upload(files);
         List<String> ids = Lists.newArrayList();
         if(!CollectionUtils.isEmpty(ats)) ids = ats.stream().map(Attachment::getId).collect(Collectors.toList());
