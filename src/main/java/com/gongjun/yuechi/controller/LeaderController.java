@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.core.utils.FileTools;
+import com.gongjun.yuechi.model.Attachment;
 import com.gongjun.yuechi.model.Leader;
 import com.gongjun.yuechi.model.Propose;
 import com.gongjun.yuechi.model.vo.LeaderVo;
@@ -39,6 +40,7 @@ import java.util.regex.Pattern;
  */
 @Api(value = "/leader", description = "领导人前端控制器接口")
 @RestController
+
 @RequestMapping("/leader")
 public class LeaderController {
 
@@ -97,11 +99,11 @@ public class LeaderController {
     @ApiOperation(value = "添加领导人", notes = "添加领导人")
     @RequiresAuthentication
     @PostMapping(value = "/add",params = {"name"})
-    public ResponseBean add(@RequestPart("files") MultipartFile[] files, Leader leader){
+    @CrossOrigin
+    public ResponseBean add(MultipartFile[] files, Leader leader){
         try {
-            String s= null;
-            List<String> ids = this.atservice.upload(files,s);
-            if(!CollectionUtils.isEmpty(ids)) leader.setPhoto(ids.get(0));
+            List<Attachment> ats = this.atservice.upload(files);
+            if(!CollectionUtils.isEmpty(ats)) leader.setPhoto(ats.get(0).getId());
             this.service.insert(leader);
         } catch (Exception e) {
             return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
@@ -115,12 +117,12 @@ public class LeaderController {
     @ApiOperation(value = "修改领导人", notes = "修改领导人")
     @RequiresAuthentication
     @PostMapping(value = "/edit",params = {"id"})
-    public ResponseBean edit(@RequestPart("files") MultipartFile[] files,Leader leader){
+    @CrossOrigin
+    public ResponseBean edit(MultipartFile[] files,Leader leader){
         try {
             if(null != files){
-                String s= null;
-                List<String> ids = this.atservice.upload(files,s);
-                if(!CollectionUtils.isEmpty(ids)) leader.setPhoto(ids.get(0));
+                List<Attachment> ats = this.atservice.upload(files);
+                if(!CollectionUtils.isEmpty(ats)) leader.setPhoto(ats.get(0).getId());
             }
             this.service.updateById(leader);
         } catch (Exception e) {

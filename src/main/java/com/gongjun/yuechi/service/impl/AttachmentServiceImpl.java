@@ -7,6 +7,8 @@ import com.gongjun.yuechi.mapper.AttachmentMapper;
 import com.gongjun.yuechi.service.IAttachmentService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,23 +32,24 @@ import java.util.List;
  */
 @Service
 public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachment> implements IAttachmentService {
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     @Value("${prop.upload-folder}")
     private String FILE_PATH;
     @Override
-    public List<String> upload(MultipartFile[] files, String msg) {
-        List ids = Lists.newArrayList();
+    public List<Attachment> upload(MultipartFile[] files) {
+        List<Attachment> ats = Lists.newArrayList();
         if(null != files){
             for (int i = 0; i < files.length; i++) {
                 MultipartFile file = files[i];
                 if(null == file) continue;
-                String id = this.writeFile(file,msg);
-                ids.add(id);
+                Attachment at = this.writeFile(file);
+                ats.add(at);
             }
         }
-        return ids;
+        return ats;
     }
 
-    private String writeFile(MultipartFile file,String msg){
+    private Attachment writeFile(MultipartFile file){
         Attachment at = new Attachment();
         byte[] bytes;
         Path result = null;
@@ -63,10 +66,9 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
             this.baseMapper.insert(at);
             result = Files.write(Paths.get(FILE_PATH+"/"+nowDate+"/"+newFileName),bytes);
         } catch (IOException e) {
-            msg = e.getMessage();
+            logger.error(e.getMessage());
         }
-        msg = "upload success";
         System.out.println(result.getFileName());
-        return at.getId();
+        return at;
     }
 }
