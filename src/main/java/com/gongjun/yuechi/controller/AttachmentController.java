@@ -48,7 +48,7 @@ public class AttachmentController {
     public ResponseBean upload(@RequestPart("files") MultipartFile[] files) throws Exception{
         List<Attachment> ats = this.service.upload(files);
         List<String> ids = Lists.newArrayList();
-        if(CollectionUtils.isEmpty(ats)) ids = ats.stream().map(Attachment::getId).collect(Collectors.toList());
+        if(!CollectionUtils.isEmpty(ats)) ids = ats.stream().map(Attachment::getId).collect(Collectors.toList());
         return new ResponseBean(HttpStatus.OK.value(),"upload success",ids);
     }
 
