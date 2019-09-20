@@ -4,14 +4,11 @@ package com.gongjun.yuechi.controller;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.ResponseBean;
-import com.gongjun.yuechi.core.utils.FileTools;
 import com.gongjun.yuechi.model.Attachment;
 import com.gongjun.yuechi.model.Leader;
-import com.gongjun.yuechi.model.Propose;
 import com.gongjun.yuechi.model.vo.LeaderVo;
 import com.gongjun.yuechi.service.IAttachmentService;
 import com.gongjun.yuechi.service.ILeaderService;
-import com.gongjun.yuechi.service.IProposeService;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,14 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * <p>
