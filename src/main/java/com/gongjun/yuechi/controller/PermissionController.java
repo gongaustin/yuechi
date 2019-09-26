@@ -94,7 +94,6 @@ public class PermissionController {
         } catch (Exception e) {
             return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
         }
-
         return new ResponseBean(HttpStatus.OK.value(),"delete success",null);
 
     }
