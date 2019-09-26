@@ -79,7 +79,6 @@ public class NewsController {
 
 
     @ApiOperation(value = "上传附件接口", notes = "上传附件接口")
-    @RequiresAuthentication
     @PostMapping(value = "/upload/ats")
     @CrossOrigin
     public ResponseBean add(@RequestPart MultipartFile[] files){

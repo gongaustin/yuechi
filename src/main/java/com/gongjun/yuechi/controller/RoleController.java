@@ -19,10 +19,7 @@ import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -119,21 +116,22 @@ public class RoleController {
         return new ResponseBean(HttpStatus.OK.value(), "delete success", null);
     }
 
-    @ApiOperation(value = "给角色添加菜单", notes = "给角色添加菜单")
+    @ApiOperation(value = "给角色添加权限", notes = "给角色添加权限")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "query", name = "id", value = "角色ID", required = true, dataType = "String"), @ApiImplicitParam(paramType = "query", name = "permissionIds", value = "菜单ID", required = true, allowMultiple = true, dataType = "String"),})
     @RequiresAuthentication
     @PostMapping(value = "/add/permission", params = {"id", "permissionIds"})
-    public ResponseBean addPermissionToRole(String id, @NotNull String[] permissionIds) {
+    public ResponseBean addPermissionToRole(String id, @NotNull String[] permissionIds,@RequestParam(defaultValue = "2") Integer type) {
         try {
-            this.rpservice.delete(new EntityWrapper<RolePermission>().where("role_id={0}", id).notIn("permission_id", Lists.newArrayList(permissionIds)));
+            this.rpservice.delete(new EntityWrapper<RolePermission>().where("role_id={0}", id).and("type={0}",type).notIn("permission_id", Lists.newArrayList(permissionIds)));
 
-            List<RolePermission> rpexist = this.rpservice.selectList(new EntityWrapper<RolePermission>().where("role_id={0}", id).in("permission_id", Lists.newArrayList(permissionIds)));
+            List<RolePermission> rpexist = this.rpservice.selectList(new EntityWrapper<RolePermission>().where("role_id={0}", id).and("type={0}",type).in("permission_id", Lists.newArrayList(permissionIds)));
             List<String> rpexistPermissionIds = CollectionUtils.isEmpty(rpexist)?Lists.newArrayList():rpexist.stream().map(RolePermission::getPermissionId).collect(Collectors.toList());
             List<RolePermission> rps = Lists.newArrayList();
             for (int i = 0; i < permissionIds.length; i++) {
                 RolePermission rp = new RolePermission();
                 rp.setRoleId(id);
                 rp.setPermissionId(permissionIds[i]);
+                rp.setType(type);
                 if(!rpexistPermissionIds.contains(permissionIds[i])) rps.add(rp);
             }
             if(!CollectionUtils.isEmpty(rps)) this.rpservice.insertBatch(rps);
@@ -146,10 +144,10 @@ public class RoleController {
     @ApiOperation(value = "根据角色ID查询已经拥有的菜单ID的数组", notes = "根据角色ID查询已经拥有的菜单ID的数组")
     @RequiresAuthentication
     @GetMapping(value = "/getPermissionsByRoleId",params = {"id"})
-    public ResponseBean getPermissionsByRoleId(@NotBlank String id) {
+    public ResponseBean getPermissionsByRoleId(@NotBlank String id,@RequestParam(defaultValue = "2") Integer type) {
         List<String> ids = Lists.newArrayList();
         try {
-            List<Permission> permissions = this.service.getPermissionsByRoleId(id);
+            List<Permission> permissions = this.service.getPermissionsByRoleId(id,type);
             if(!CollectionUtils.isEmpty(permissions)) ids = permissions.stream().map(Permission::getId).collect(Collectors.toList());
         } catch (Exception e){
             return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);

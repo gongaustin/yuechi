@@ -7,6 +7,9 @@ import com.gongjun.yuechi.mapper.AttachmentMapper;
 import com.gongjun.yuechi.service.IAttachmentService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.filters.ImageFilter;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,6 +27,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 /**
  * <p>
@@ -62,9 +69,23 @@ public class AttachmentServiceImpl extends ServiceImpl<AttachmentMapper, Attachm
             String newFileName = fileName.substring(0,fileName.lastIndexOf("."))+"-"+String.valueOf(nowTimes)+"."+fileSuffix;
             Path path = Paths.get(FILE_PATH+"/"+nowDate);
             if(!Files.isWritable(path)) Files.createDirectories(path);
+            String filePath = FILE_PATH+"/"+nowDate+"/"+newFileName;
             at.setUrl("http://120.24.241.113/upload/file"+"/"+nowDate+"/"+newFileName);
             this.baseMapper.insert(at);
-            result = Files.write(Paths.get(FILE_PATH+"/"+nowDate+"/"+newFileName),bytes);
+            result = Files.write(Paths.get(filePath),bytes);
+
+            if (StringUtils.containsAny("jpg,png,bmp,jpeg,tif,gif",fileSuffix.toLowerCase())) {
+                try {
+                    BufferedImage bim = ImageIO.read(new File(filePath));
+                    int width = bim.getWidth()>600?600:bim.getWidth();
+                    Thumbnails.of(filePath)
+                            .width(width)
+                            .keepAspectRatio(true)
+                            .toFile(filePath);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

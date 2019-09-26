@@ -21,7 +21,7 @@ import java.util.List;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IRoleService {
 
     @Override
-    public List<Permission> getPermissionsByRoleId(String id) {
-        return this.baseMapper.getPermissionsByRoleId(id);
+    public List<Permission> getPermissionsByRoleId(String id,Integer type) {
+        return this.baseMapper.getPermissionsByRoleId(id,type);
     }
 }

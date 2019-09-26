@@ -36,6 +36,11 @@ public class RolePermission implements Serializable {
     @TableField("permission_id")
     private String permissionId;
 
+    /**
+     * 权限类型
+     */
+    private Integer type;
+
 
     public String getId() {
         return id;
@@ -61,12 +66,21 @@ public class RolePermission implements Serializable {
         this.permissionId = permissionId;
     }
 
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
     @Override
     public String toString() {
         return "RolePermission{" +
         ", id=" + id +
         ", roleId=" + roleId +
         ", permissionId=" + permissionId +
+        ", type=" + type +
         "}";
     }
 }

@@ -9,6 +9,7 @@ import com.gongjun.yuechi.service.IPermissionService;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,12 +40,14 @@ public class PermissionController {
     /**
      * 分页查询菜单
      * */
-    @ApiOperation(value = "分页查询菜单", notes = "分页查询菜单")
+    @ApiOperation(value = "分页查询菜单/模块", notes = "分页查询菜单/模块")
     @RequiresAuthentication
     @GetMapping("/page")
-    public ResponseBean selectPermissionPage(Page<Permission> page){
+    public ResponseBean selectPermissionPage(Page<Permission> page,@RequestParam(defaultValue = "2")Integer type){
+        EntityWrapper<Permission> ew = new EntityWrapper<>();
+        ew.where("type={0}",type);
         page.setAscs(Lists.newArrayList("orders"));
-        Page<Permission> permissions = this.service.selectPage(page);
+        Page<Permission> permissions = this.service.selectPage(page,ew);
         return new ResponseBean(HttpStatus.OK.value(),"",permissions);
     }
 
@@ -96,13 +99,13 @@ public class PermissionController {
 
     }
 
-    @ApiOperation(value = "查询所有已启用的菜单", notes = "查询所有已启用的菜单")
+    @ApiOperation(value = "查询所有已启用的菜单/模块", notes = "查询所有已启用的菜单/模块")
     @RequiresAuthentication
     @GetMapping(value = "/getAllEnabled")
-    public ResponseBean getAllEnabled(String id){
+    public ResponseBean getAllEnabled(@RequestParam(defaultValue = "2") Integer type){
         List permissions;
         try {
-            permissions = this.service.selectList(new EntityWrapper<Permission>().where("status={0}",1).orderAsc(Lists.newArrayList("orders")));
+            permissions = this.service.selectList(new EntityWrapper<Permission>().where("status={0}",1).and("type={0}",type).orderAsc(Lists.newArrayList("orders")));
         } catch (Exception e) {
             return new ResponseBean(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
         }
