@@ -22,6 +22,7 @@
                 up.*
             FROM
                 upms_permission up
+                LEFT JOIN upms_role_permission urp ON 1 = 1
                 LEFT JOIN upms_user_permission uur ON uur.`permission_id` = up.`id`
                 LEFT JOIN upms_role ur ON 1 = 1
              WHERE
@@ -44,6 +45,23 @@
         ORDER BY
             uu.`ctime` DESC
 
+    </select>
+
+    <select id="selectUserModulessByWrapper" resultType="com.gongjun.yuechi.model.Permission">
+        SELECT DISTINCT
+                up.*
+            FROM
+                upms_permission up
+                LEFT JOIN upms_role_permission urp ON urp.`permission_id` = up.`id`
+                LEFT JOIN upms_role ur ON ur.`id` = urp.`role_id`
+                LEFT JOIN upms_user_role uur ON uur.`role_id` = ur.`id`
+            WHERE
+                1 = 1
+                AND uur.`user_id` = '${id}'
+                AND up.`type` = 3
+                AND up.`status` = 1
+                AND ur.`status` = 1
+          ORDER BY up.`permission_value`
     </select>
 
     <select id="findUserById" resultType="com.gongjun.yuechi.model.vo.UserVo">

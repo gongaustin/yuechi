@@ -2,11 +2,13 @@ package com.gongjun.yuechi.controller;
 
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.ResponseBean;
 import com.gongjun.yuechi.core.utils.JWTUtil;
 import com.gongjun.yuechi.model.Attachment;
 import com.gongjun.yuechi.model.News;
+import com.gongjun.yuechi.model.Permission;
 import com.gongjun.yuechi.service.IAttachmentService;
 import com.gongjun.yuechi.service.INewsService;
 import com.gongjun.yuechi.service.IUserService;
@@ -75,6 +77,18 @@ public class NewsController {
         return new ResponseBean(HttpStatus.OK.value(),"delete success",news);
     }
 
+    @Autowired
+    private IUserService uservice;
+
+    @ApiOperation(value = "查询用户模块权限", notes = "查询用户模块权限")
+    @RequiresAuthentication
+    @GetMapping(value = "/findmoduleByUserToken")
+    public ResponseBean findmoduleByUserToken(@RequestParam(defaultValue = "3") Integer type){
+
+        List<Permission> permissions = this.uservice.selectUserModulessByWrapper(JWTUtil.getUserId());
+        return new ResponseBean(HttpStatus.OK.value(),"find success",permissions);
+    }
+
 
 
 
@@ -87,9 +101,6 @@ public class NewsController {
         if(!CollectionUtils.isEmpty(ats))  urls = ats.stream().map(Attachment::getUrl).collect(Collectors.toList());
         return new ResponseBean(HttpStatus.OK.value(),"add success",urls);
     }
-
-    @Autowired
-    IUserService uservice;
 
     @ApiOperation(value = "添加、发表文章", notes = "添加、发表文章")
     @RequiresAuthentication

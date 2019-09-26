@@ -31,5 +31,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     List<Role> getRolesByManagerId(@Param("id") String id);
 
+    List<Permission> selectUserModulessByWrapper(@Param("id") String id);
+
 
 }

@@ -51,4 +51,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public List<Role> getRolesByManagerId(String id) {
         return this.baseMapper.getRolesByManagerId(id);
     }
+
+    @Override
+    public List<Permission> selectUserModulessByWrapper(String id) {
+        return this.baseMapper.selectUserModulessByWrapper(id);
+    }
 }

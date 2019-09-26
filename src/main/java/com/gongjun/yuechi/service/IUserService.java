@@ -23,6 +23,8 @@ public interface IUserService extends IService<User> {
 
     List<Permission> selectUserPermissionsByWrapper(Wrapper wrapper);
 
+    List<Permission> selectUserModulessByWrapper(String id);
+
     UserBean getUser(String username);
 
     List<UserVo> selectUserVoPage(Page page,Wrapper wrapper);

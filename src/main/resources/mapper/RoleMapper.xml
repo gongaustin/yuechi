@@ -10,6 +10,7 @@
             LEFT JOIN upms_role_permission urp ON urp.`permission_id` = up.`id`
         WHERE
             urp.`role_id` = '${id}'
+            AND up.`type` = '${type}'
         ORDER BY up.`orders`
     </select>
 </mapper>
