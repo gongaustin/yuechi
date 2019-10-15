@@ -69,7 +69,7 @@ public class LoginController {
         String token;
         //查询权限值
         Wrapper ew = new EntityWrapper().and("uur.user_id={0}",user.getId());
-        ew.and("urp.type={0}",2);
+        ew.and("up.type={0}",2);
         if(!"admin".equals(username)){
             ew.and("up.status={0}",1).and("ur.status={0}",1);
         }

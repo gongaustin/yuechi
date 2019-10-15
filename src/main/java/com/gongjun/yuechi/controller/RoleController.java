@@ -122,17 +122,18 @@ public class RoleController {
     @PostMapping(value = "/add/permission", params = {"id", "permissionIds"})
     public ResponseBean addPermissionToRole(String id, @NotNull String[] permissionIds,@RequestParam(defaultValue = "2") Integer type) {
         try {
-            this.rpservice.delete(new EntityWrapper<RolePermission>().where("role_id={0}", id).and("type={0}",type).notIn("permission_id", Lists.newArrayList(permissionIds)));
+            List<Permission> typePermissions = this.service.getPermissionsByRoleId(id,type==2?3:2);
+            List<String> typeIds = CollectionUtils.isEmpty(typePermissions)?Lists.newArrayList():typePermissions.stream().map(Permission::getId).collect(Collectors.toList());
+            this.rpservice.delete(new EntityWrapper<RolePermission>().where("role_id={0}", id).notIn("permission_id", Lists.newArrayList(permissionIds).addAll(typeIds)));
 
-            List<RolePermission> rpexist = this.rpservice.selectList(new EntityWrapper<RolePermission>().where("role_id={0}", id).and("type={0}",type).in("permission_id", Lists.newArrayList(permissionIds)));
-            List<String> rpexistPermissionIds = CollectionUtils.isEmpty(rpexist)?Lists.newArrayList():rpexist.stream().map(RolePermission::getPermissionId).collect(Collectors.toList());
+            List<Permission> existPermissions = this.service.getPermissionsByRoleId(id,type==2?2:3);
+            List<String> existPermissionIds = CollectionUtils.isEmpty(existPermissions)?Lists.newArrayList():existPermissions.stream().map(Permission::getId).collect(Collectors.toList());
             List<RolePermission> rps = Lists.newArrayList();
             for (int i = 0; i < permissionIds.length; i++) {
                 RolePermission rp = new RolePermission();
                 rp.setRoleId(id);
                 rp.setPermissionId(permissionIds[i]);
-                rp.setType(type);
-                if(!rpexistPermissionIds.contains(permissionIds[i])) rps.add(rp);
+                if(!existPermissionIds.contains(permissionIds[i])) rps.add(rp);
             }
             if(!CollectionUtils.isEmpty(rps)) this.rpservice.insertBatch(rps);
         } catch (Exception e) {

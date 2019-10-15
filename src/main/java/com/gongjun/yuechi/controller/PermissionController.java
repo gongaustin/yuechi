@@ -56,6 +56,8 @@ public class PermissionController {
     @PostMapping(value = "/add",params = {"name","permissionValue"})
     public ResponseBean addPermission(Permission permission){
 
+        permission.setType(2);
+
         try {
             this.service.insert(permission);
         } catch (Exception e) {
