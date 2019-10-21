@@ -1,17 +1,16 @@
 package com.gongjun.yuechi.controller;
 
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.gongjun.yuechi.core.bean.ResponseBean;
-import com.gongjun.yuechi.model.Dept;
 import com.gongjun.yuechi.model.News;
-import com.gongjun.yuechi.model.User;
 import com.gongjun.yuechi.service.IDeptService;
 import com.gongjun.yuechi.service.INewsService;
 import com.gongjun.yuechi.service.IUserService;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,23 +56,30 @@ public class PortalController {
 
     @ApiOperation(value = "板块列表", notes = "板块列表")
     @GetMapping("plate")
-    public ResponseBean plateList (@RequestParam String type){
+    public ResponseBean plateList (@RequestParam String type, Page page){
 
-        List<News> news = this.nservice.selectList(new EntityWrapper<News>().where("type={0}",type).orderDesc(Lists.newArrayList("ctime")));
+        Page news = this.nservice.selectPage(page,new EntityWrapper<News>().where("type={0}",type).orderDesc(Lists.newArrayList("ctime")));
 
         return new ResponseBean(HttpStatus.OK.value(),"",news);
     }
 
     /**
-     * 重点科室
+     * 科室
      * */
     @Autowired
     private IDeptService dservice;
     @ApiOperation(value = "科室", notes = "科室")
     @GetMapping("dept")
-    public ResponseBean deptList (Integer isImprotant){
+    public ResponseBean deptList (Integer isImprotant,Page page){
 
-        List<Dept> depts = this.dservice.selectList(new EntityWrapper<Dept>().where("type={0}",1).orderDesc(Lists.newArrayList("ctime")));
+       Wrapper wrapper = new EntityWrapper();
+        wrapper.where("status={0}",1);
+
+       if(null != isImprotant)
+           wrapper.and("is_important",isImprotant);
+       wrapper.orderDesc(Lists.newArrayList("ctime"));
+
+        Page depts = this.dservice.selectPage(page,wrapper);
 
         return new ResponseBean(HttpStatus.OK.value(),"",depts);
     }
@@ -86,9 +92,13 @@ public class PortalController {
     private IUserService uservice;
 
     @GetMapping("doctor")
-    public ResponseBean doctorList (){
+    public ResponseBean doctorList (Page page,String[] position){
 
-        List<User> doctors = this.uservice.selectList(new EntityWrapper<User>().where("type={0}",1).orderDesc(Lists.newArrayList("ctime")));
+        Wrapper wrapper = new EntityWrapper();
+        wrapper.where("status={0}",1);
+        wrapper.in("position",Lists.newArrayList(position));
+        wrapper.orderDesc(Lists.newArrayList("ctime"));
+        Page doctors = this.uservice.selectPage(page,wrapper);
 
         return new ResponseBean(HttpStatus.OK.value(),"",doctors);
     }
