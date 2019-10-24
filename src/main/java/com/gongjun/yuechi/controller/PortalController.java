@@ -54,7 +54,7 @@ public class PortalController {
      * 板块列表
      * */
 
-    @ApiOperation(value = "板块列表", notes = "板块列表")
+    @ApiOperation(value = "板块文章列表", notes = "板块文章列表")
     @GetMapping("plate")
     public ResponseBean plateList (@RequestParam String type, Page page){
 
@@ -76,7 +76,7 @@ public class PortalController {
         wrapper.where("status={0}",1);
 
        if(null != isImprotant)
-           wrapper.and("is_important",isImprotant);
+           wrapper.and("is_important={0}",isImprotant);
        wrapper.orderDesc(Lists.newArrayList("ctime"));
 
         Page depts = this.dservice.selectPage(page,wrapper);
@@ -90,7 +90,7 @@ public class PortalController {
      * */
     @Autowired
     private IUserService uservice;
-
+    @ApiOperation(value = "医生列表", notes = "医生列表")
     @GetMapping("doctor")
     public ResponseBean doctorList (Page page,String[] position){
 
@@ -112,8 +112,9 @@ public class PortalController {
     /**
      * 文章详情
      * */
-    @GetMapping(value = "doctor",params = {"id"})
-    public ResponseBean doctorList (@NotBlank String id){
+    @ApiOperation(value = "文章详情", notes = "文章详情")
+    @GetMapping(value = "detail",params = {"id"})
+    public ResponseBean detail (@NotBlank String id){
          News news = this.nservice.selectById(id);
         return new ResponseBean(HttpStatus.OK.value(),"",news);
     }
